@@ -16,6 +16,14 @@ class CrudController:
                           daily=params['daily'])
             return
 
+        if entity == 'Category':
+            qh.add_category(name=params['name'])
+            return
+
+        if entity == 'Expense':
+            qh.add_expense(amount=params['amount'], category=params['category'],
+                           added_date=params['added'], expense_date=['expensed'], comment=['comment'])
+            return
         raise NotImplementedError(f'Добавление для сущности {entity} не реализовано!')
 
     def read(self, entity, params=None):
@@ -23,7 +31,8 @@ class CrudController:
             return qh.get_budget()
         if entity == 'Category':
             return qh.get_category()
-
+        if entity == 'Expense':
+            return qh.get_expense()
         raise NotImplementedError(f'Чтение для сущности {entity} не реализовано!')
 
     def update(self, entity, params):

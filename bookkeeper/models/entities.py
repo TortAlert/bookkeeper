@@ -18,7 +18,7 @@ class Category(db.Entity):
     id = PrimaryKey(int, auto=True)
     expenses = Set(Expense)
     name = Required(str)
-    parent = Optional('Category', reverse='parent')
+    #parent = Optional('Category', reverse='parent')
 
 
 class Budget(db.Entity):
