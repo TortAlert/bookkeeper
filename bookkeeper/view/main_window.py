@@ -122,18 +122,33 @@ class MainWindow(QMainWindow):
         self.budget_button.clicked.connect(self.on_budget_button_click)
 
         self.layout4 = QHBoxLayout()
+        self.layout4.addWidget(QLabel('Сумма:'))
+        self.amount_line = QLineEdit()
+        self.layout4.addWidget(self.amount_line)
+
+        self.layout5 = QHBoxLayout()
         self.category = QComboBox(self)
-        self.layout4.addWidget(QLabel('Категория:'))
-        self.layout4.addWidget(self.category)
+        self.layout5.addWidget(QLabel('Категория:'))
+        self.layout5.addWidget(self.category)
         self.category_button = QPushButton('Редактировать')
-        self.layout4.addWidget(self.category_button)
+        self.layout5.addWidget(self.category_button)
         self.category_button.clicked.connect(self.on_category_button_click)
+
+        self.layout6 = QVBoxLayout()
+        self.add_exp_button = QPushButton('Добавить')
+        self.layout6.addWidget(self.add_exp_button)
+        self.add_exp_button.clicked.connect(self.add_exp_button_click)
+        self.upd_exp_button = QPushButton('Внести изменения в траты')
+        self.layout6.addWidget(self.upd_exp_button)
+        self.upd_exp_button.clicked.connect(self.upd_exp_button_click)
 
         self.megalayout = QVBoxLayout()
         self.megalayout.addLayout(self.layout1)
         self.megalayout.addLayout(self.layout2)
         self.megalayout.addLayout(self.layout3)
         self.megalayout.addLayout(self.layout4)
+        self.megalayout.addLayout(self.layout5)
+        self.megalayout.addLayout(self.layout6)
 
         self.widget = QWidget()
         self.widget.setLayout(self.megalayout)
@@ -171,3 +186,28 @@ class MainWindow(QMainWindow):
         self.dialog.refresh_categories()
         self.dialog.show()
 
+    def refresh_expenses(self):
+        exp = self.controller.read('Expense')
+        self.db_table.setRowCount(len(exp))
+        index = 0
+        for i in exp:
+            print('i= ', i)
+            cat_it = QTableWidgetItem(str(i[0]))
+            amount_it = QTableWidgetItem(str(i[1]))
+            time_it = QTableWidgetItem(str(i[3]))
+            com_it = QTableWidgetItem(str(i[4]))
+            self.db_table.setItem(index, 0, time_it)
+            self.db_table.setItem(index, 1, amount_it)
+            self.db_table.setItem(index, 2, cat_it)
+            self.db_table.setItem(index, 3, com_it)
+            index = index + 1
+
+    def add_exp_button_click(self):
+        self.controller.create('Expense', {'amount': float(self.amount_line.text()),
+                                           'category': self.category.currentText()})
+        self.refresh_expenses()
+
+    def upd_exp_button_click(self):
+        #for i in range(self.db_table.rowCount()):
+
+        print('aboba')

@@ -13,8 +13,11 @@ class App(QApplication):
         #self.controller.create('Category', {'name': 'Clothes'})
         #self.controller.create('Category', {'name': 'Grosserka', 'parent': 'Gross'})
         #print(self.controller.read('Category'))
+        #self.controller.create('Expense', {'amount': 15, 'category': 'Gross', 'comment': 'Hello!'})
+        self.controller.read('Expense')
         self.view.refresh_budgets()
         self.view.refresh_categories()
+        self.view.refresh_expenses()
         self.view.show()
 
 

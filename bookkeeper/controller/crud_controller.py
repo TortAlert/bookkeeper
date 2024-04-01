@@ -21,8 +21,7 @@ class CrudController:
             return
 
         if entity == 'Expense':
-            qh.add_expense(amount=params['amount'], category=params['category'],
-                           added_date=params['added'], expense_date=['expensed'], comment=['comment'])
+            qh.add_expense(amount=params['amount'], category=params['category'])
             return
         raise NotImplementedError(f'Добавление для сущности {entity} не реализовано!')
 
