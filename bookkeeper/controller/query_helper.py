@@ -46,7 +46,6 @@ def get_category():
 def add_expense(amount, category, expense_date=datetime.date.today(), added_date=datetime.date.today(), comment=''):
     try:
         q = select((c.id) for c in Category if c.name == category)
-        print("Q is: ", list(q), "len(Q) = ", len(q))
         Expense(amount=amount, expense_date=expense_date, added_date=added_date, category=list(q)[0], comment=comment)
     except Exception as e:
         print(e)
@@ -54,10 +53,24 @@ def add_expense(amount, category, expense_date=datetime.date.today(), added_date
 @db_session
 def get_expense():
     try:
-        q = select((ex.category.name, ex.amount, ex.expense_date, ex.added_date, ex.comment) for ex in Expense)
+        q = select((ex.id, ex.category.name, ex.amount, ex.expense_date, ex.added_date, ex.comment) for ex in Expense)
         exs = list(q)
-        print(exs[0][0])
+        print(exs)
         return exs
         #return tuple(" > ".join(expense) for expense in exs)
+    except Exception as e:
+        print(e)
+@db_session
+def upd_expense(id, added_date, amount, category, comment):
+    try:
+        ex = Expense[id]
+        #ex = select(e for e in Expense if e.id == id)
+        ex.amount = float(amount)
+        date = added_date.split('-')
+        #print(date)
+        ex.added_date = datetime.date(int(date[0]), int(date[1]), int(date[2]))
+        q = select((c.id) for c in Category if c.name == category)
+        ex.category = int(list(q)[0])
+        ex.comment = comment
     except Exception as e:
         print(e)

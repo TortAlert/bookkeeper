@@ -10,6 +10,7 @@ class CatWindow(QWidget):
         self.setFixedSize(400, 200)
         self.controller = None
         self.cat_box = None
+        self.db_cat_box = None
         self.layout = QVBoxLayout()
         self.t_layout = QVBoxLayout()
         self.table_name = QLabel('Список категорий')
@@ -56,10 +57,20 @@ class CatWindow(QWidget):
     def give_cat_box(self, cat_box):
         self.cat_box = cat_box
 
+    def give_db_cat_box(self, db_cat_box):
+        self.db_cat_box = db_cat_box
+
     def closeEvent(self, event):
         cats = self.controller.read('Category')
         self.cat_box.clear()
         self.cat_box.addItems(cats)
+        exp = self.controller.read('Expense')
+        i = 0
+        for e in exp:
+            self.db_cat_box[i].clear()
+            self.db_cat_box[i].addItems(cats)
+            self.db_cat_box[i].setCurrentText(str(e[1]))
+            i = i + 1
         event.accept()
 
 class MainWindow(QMainWindow):
@@ -74,6 +85,8 @@ class MainWindow(QMainWindow):
         self.layout1 = QVBoxLayout()
         self.db_name = QLabel('Траты:')
         self.layout1.addWidget(self.db_name)
+        self.id_list = []
+        self.cat_box = []
         self.db_table = QTableWidget()
         self.db_table.setColumnCount(4)
         self.db_table.setHorizontalHeaderLabels(['Дата', 'Сумма', 'Категория', 'Комментарий'])
@@ -183,22 +196,29 @@ class MainWindow(QMainWindow):
         self.dialog = CatWindow()
         self.dialog.set_controller(self.controller)
         self.dialog.give_cat_box(self.category)
+        self.dialog.give_db_cat_box(self.cat_box)
         self.dialog.refresh_categories()
         self.dialog.show()
 
     def refresh_expenses(self):
         exp = self.controller.read('Expense')
+        cats = self.controller.read('Category')
+        self.cat_box.clear()
         self.db_table.setRowCount(len(exp))
+        self.id_list.clear()
         index = 0
         for i in exp:
-            print('i= ', i)
-            cat_it = QTableWidgetItem(str(i[0]))
-            amount_it = QTableWidgetItem(str(i[1]))
-            time_it = QTableWidgetItem(str(i[3]))
-            com_it = QTableWidgetItem(str(i[4]))
+            self.id_list.append(i[0])
+            amount_it = QTableWidgetItem(str(i[2]))
+            time_it = QTableWidgetItem(str(i[4]))
+            com_it = QTableWidgetItem(str(i[5]))
             self.db_table.setItem(index, 0, time_it)
             self.db_table.setItem(index, 1, amount_it)
-            self.db_table.setItem(index, 2, cat_it)
+            self.cat_box.append(QComboBox(self))
+            self.cat_box[index].clear()
+            self.cat_box[index].addItems(cats)
+            self.cat_box[index].setCurrentText(str(i[1]))
+            self.db_table.setCellWidget(index, 2, self.cat_box[index])
             self.db_table.setItem(index, 3, com_it)
             index = index + 1
 
@@ -208,6 +228,17 @@ class MainWindow(QMainWindow):
         self.refresh_expenses()
 
     def upd_exp_button_click(self):
-        #for i in range(self.db_table.rowCount()):
-
-        print('aboba')
+        for i in range(self.db_table.rowCount()):
+            time_it = self.db_table.takeItem(i, 0)
+            time = time_it.text()
+            amount_it = self.db_table.takeItem(i, 1)
+            amount = float(amount_it.text())
+            cat = self.cat_box[i].currentText()
+            com_it = self.db_table.takeItem(i, 3)
+            com = com_it.text()
+            self.controller.update('Expense', {'id': self.id_list[i],
+                                               'date': time,
+                                               'amount': float(amount),
+                                               'category': cat,
+                                               'comment': com})
+        self.refresh_expenses()

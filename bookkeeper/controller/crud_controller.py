@@ -39,7 +39,9 @@ class CrudController:
             qh.add_budget(monthly=params['monthly'], weekly=params['weekly'],
                           daily=params['daily'])
             return
-
+        if entity == 'Expense':
+            qh.upd_expense(id=params['id'], added_date=params['date'], amount=params['amount'], category=params['category'], comment=params['comment'])
+            return
         raise NotImplementedError(f'Изменение для сущности {entity} не реализовано!')
 
     def delete(self, entity):
