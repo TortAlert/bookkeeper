@@ -14,7 +14,7 @@ def get_budget():
     try:
         q = select(b for b in Budget).order_by(lambda: desc(b.id)).limit(1)
         budget = q.to_list()[0]
-        return tuple([budget.monthly, budget.weekly, budget.daily])  # TODO: return the object itself for GUI?
+        return tuple([budget.monthly, budget.weekly, budget.daily])
     except Exception as e:
         print(e)
 
