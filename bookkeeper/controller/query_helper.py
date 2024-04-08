@@ -1,5 +1,3 @@
-import time
-
 from pony.orm import *
 from bookkeeper.models.entities import Budget, Category, Expense
 import datetime
@@ -9,8 +7,7 @@ def add_budget(monthly, weekly, daily):
     try:
         Budget(monthly=monthly, weekly=weekly, daily=daily)
     except Exception as e:
-        print(e)  # TODO: This should be sent to GUI in a user-friendly manner
-
+        print(e)
 
 @db_session
 def get_budget():
@@ -19,7 +16,7 @@ def get_budget():
         budget = q.to_list()[0]
         return tuple([budget.monthly, budget.weekly, budget.daily])  # TODO: return the object itself for GUI?
     except Exception as e:
-        print(e)  # TODO: This should be sent to GUI in a user-friendly manner
+        print(e)
 
 @db_session
 def add_category(name):
@@ -31,7 +28,6 @@ def add_category(name):
             return Exception
     except Exception as e:
         print(e)
-
 
 @db_session
 def get_category():
@@ -71,6 +67,7 @@ def add_expense(amount, category, expense_date=datetime.date.today(), added_date
         Expense(amount=amount, expense_date=expense_date, added_date=added_date, category=list(q)[0], comment=comment)
     except Exception as e:
         print(e)
+
 @db_session
 def get_expense():
     try:
@@ -85,6 +82,7 @@ def get_expense():
         return exs, day_summ, week_summ, month_summ
     except Exception as e:
         print(e)
+
 @db_session
 def upd_expense(id, added_date, amount, category, comment):
     try:

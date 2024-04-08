@@ -40,8 +40,8 @@ class CrudController:
                           daily=params['daily'])
             return
         if entity == 'Category':
-            qh.upd_category(id=params['id'], name=params['name'])
-            return
+            ex = qh.upd_category(id=params['id'], name=params['name'])
+            return ex
         if entity == 'Expense':
             qh.upd_expense(id=params['id'], added_date=params['date'], amount=params['amount'], category=params['category'], comment=params['comment'])
             return
