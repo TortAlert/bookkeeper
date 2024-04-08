@@ -375,7 +375,7 @@ class MainWindow(QMainWindow):
     #Функционал кнопки удаления покупки
     def del_exp_button_click(self):
         row_number = int(self.row_num_line.text())
-        if (row_number-1 > self.db_table.rowCount()):
+        if (row_number-1 >= self.db_table.rowCount()) or (row_number-1 < 0):
             dlg = WrongRowDialog()
             dlg.exec()
         else:

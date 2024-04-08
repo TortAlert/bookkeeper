@@ -45,7 +45,7 @@ def upd_category(id, name):
     try:
         cat = Category[id]
         q = select((c) for c in Category if c.name == name)
-        if len(q) == 0:
+        if (len(q) == 0) or (cat.name == name):
             cat.name = name
         else:
             return Exception
