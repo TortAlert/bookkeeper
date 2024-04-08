@@ -8,12 +8,8 @@ class App(QApplication):
         self.view = MainWindow()
         self.controller = CrudController()
         self.view.set_controller(self.controller)
-        #self.controller.create('Budget', {'monthly': 10000, 'weekly': 1000, 'daily': 100})
-        #TODO: create Budget if there is no Budget in db, else do not touch db
-        #self.controller.create('Category', {'name': 'Clothes'})
-        #self.controller.create('Category', {'name': 'Grosserka', 'parent': 'Gross'})
-        #print(self.controller.read('Category'))
-        #self.controller.create('Expense', {'amount': 15, 'category': 'Gross', 'comment': 'Hello!'})
+        if (self.controller.read('Budget') == None):
+            self.controller.create('Budget', {'monthly': 10000, 'weekly': 1000, 'daily': 100})
         self.controller.read('Expense')
         self.view.refresh_budgets()
         self.view.refresh_categories()

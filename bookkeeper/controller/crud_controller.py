@@ -17,8 +17,8 @@ class CrudController:
             return
 
         if entity == 'Category':
-            qh.add_category(name=params['name'])
-            return
+            ex = qh.add_category(name=params['name'])
+            return ex
 
         if entity == 'Expense':
             qh.add_expense(amount=params['amount'], category=params['category'])
@@ -39,10 +39,19 @@ class CrudController:
             qh.add_budget(monthly=params['monthly'], weekly=params['weekly'],
                           daily=params['daily'])
             return
+        if entity == 'Category':
+            qh.upd_category(id=params['id'], name=params['name'])
+            return
         if entity == 'Expense':
             qh.upd_expense(id=params['id'], added_date=params['date'], amount=params['amount'], category=params['category'], comment=params['comment'])
             return
         raise NotImplementedError(f'Изменение для сущности {entity} не реализовано!')
 
-    def delete(self, entity):
+    def delete(self, entity, params):
+        if entity == 'Expense':
+            qh.del_expense(id=params['id'])
+            return
+        if entity == 'Category':
+            qh.del_category(id=params['id'])
+            return
         raise NotImplementedError(f'Удаление для сущности {entity} не реализовано!')
